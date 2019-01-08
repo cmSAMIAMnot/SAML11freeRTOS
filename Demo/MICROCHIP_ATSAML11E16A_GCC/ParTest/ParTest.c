@@ -76,47 +76,49 @@ perform the desired operation. */
 void vParTestInitialise( void )
 {
 	/* Configure relevant port P0 to push pull output to drive LEDs. */
-
-	/* P0.5 */
+/*
+	/* P0.5 /
 	PORT0->IOCR4 &= ~( ( 0xFFUL <<  8 ) );
 	PORT0->IOCR4 |= ( 0x80UL <<  8 );
 	vParTestSetLED( 0, pdFALSE );
 
-	/* P0.6 */
+	/* P0.6 /
 	PORT0->IOCR4 &= ~( ( 0xFFUL << 16 ) );
 	PORT0->IOCR4 |= ( 0x80UL << 16 );
 	vParTestSetLED( 1, pdFALSE );
 
-	/* P1.2 */
+	/* P1.2 /
 	PORT1->IOCR0 &= ~( ( 0xFFUL << 16 ) );
 	PORT1->IOCR0 |= ( 0x80UL << 16 );
 	vParTestSetLED( 2, pdFALSE );
 
-	/* P1.3 */
+	/* P1.3 /
 	PORT1->IOCR0 &= ~( ( 0xFFUL << 24 ) );
 	PORT1->IOCR0 |= ( 0x80UL << 24 );
 	vParTestSetLED( 3, pdFALSE );
 
-	/* P1.4 */
+	/* P1.4 /
 	PORT1->IOCR4 &= ~( ( 0xFFUL << 0 ) );
 	PORT1->IOCR4 |= ( 0x80UL << 0 );
 	vParTestSetLED( 4, pdFALSE );
 
-	/* P1.5 */
+	/* P1.5 /
 	PORT1->IOCR4 &= ~( ( 0xFFUL << 8 ) );
 	PORT1->IOCR4 |= ( 0x80UL << 8 );
 	vParTestSetLED( 5, pdFALSE );
+*/
 }
 /*-----------------------------------------------------------*/
 
 /* UPDATE */
 void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 {
+/*
 	if( ulLED < partstNUM_LEDS )
 	{
 		if( xValue == pdTRUE )
 		{
-			/* Turn the LED on. */
+			/* Turn the LED on. /
 			if( ulLEDPorts[ ulLED ] == 0x00 )
 			{
 				PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT );
@@ -128,7 +130,7 @@ void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 		}
 		else
 		{
-			/* Turn the LED off. */
+			/* Turn the LED off. /
 			if( ulLEDPorts[ ulLED ] == 0x00 )
 			{
 				PORT0->OMR = ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
@@ -139,16 +141,18 @@ void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 			}
 		}
 	}
+*/
 }
 /*-----------------------------------------------------------*/
 
 /* UPDATE */
 void vParTestToggleLED( unsigned long ulLED )
 {
+/*
 	if( ulLED < partstNUM_LEDS )
 	{
 		/* Setting both the ON and OFF bits simultaneously results in the bit
-		being toggled. */
+		being toggled. /
 		if( ulLEDPorts[ ulLED ] == 0x00 )
 		{
 			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT ) | ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
@@ -158,6 +162,7 @@ void vParTestToggleLED( unsigned long ulLED )
 			PORT1->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT ) | ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
 		}
 	}
+*/
 }
 /*-----------------------------------------------------------*/
 

@@ -26,6 +26,28 @@ endif
 
 FREERTOS_ROOT=../..
 
+OUTPUT_FILE_NAME :=AtmelStart
+QUOTE := "
+OUTPUT_FILE_PATH +=$(OUTPUT_FILE_NAME).elf
+OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_FILE_NAME).elf
+
+
+CFLAGS += -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 -mcmse
+CFLAGS += -D__SAML11E16A__ -march=armv8-m.base
+CFLAGS += -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"
+CFLAGS += -flto
+
+SNFLAG=-Wl,--out-implib=libsecure_gateway_veneer.lib -Wl,--cmse-implib 
+
+LDFLAGS += -Wl,--start-group -lm -Wl,--end-group -mthumb
+LDfLAGS += -Wl,-Map="$(OUTPUT_FILE_NAME).map"
+LDFLAGS += --specs=nano.specs -Wl,--gc-sections -march=armv8-m.base
+LDFLAGS += -nostdlib
+#LDFLAGS += -flto
+#LDFLAGS += -T"../Device_Startup/saml11_secure.ld"
+LDFLAGS += -T"../Device_Startup/saml11_bl.ld"
+LDFLAGS += -L"./Device_Startup"
+
 # List the subdirectories for creating object files
 SUB_DIRS +=  \
  \
@@ -49,85 +71,89 @@ hpl/tram \
 $(FREERTOS_ROOT)/Source \
 ParTest
 
-# List the object files
+# List the object files for dependencies
 #OBJS += hal/src/hal_io.o
-OBJS += gcc/system_saml11e16a.o
-OBJS += hpl/wdt/hpl_wdt.o
-OBJS +=hal/utils/src/utils_syscalls.o \
-hal/src/hal_spi_m_sync.o \
-hal/src/hal_timer.o \
-hal/src/hal_delay.o \
-main.o \
-hpl/oscctrl/hpl_oscctrl.o \
-hpl/core/hpl_init.o \
-hal/src/hal_wdt.o \
-hal/utils/src/utils_assert.o \
-hpl/dmac/hpl_dmac.o \
-hpl/pm/hpl_pm.o \
-hal/src/hal_usart_sync.o \
-hpl/mclk/hpl_mclk.o \
-hpl/gclk/hpl_gclk.o \
-hal/src/hal_init.o \
-hal/utils/src/utils_list.o \
-hpl/osc32kctrl/hpl_osc32kctrl.o \
-hpl/tram/tram_lite.o \
-hpl/sercom/hpl_sercom.o \
-hpl/core/hpl_core_m23_base.o \
-hpl/nvmctrl/nvmctrl_lite.o \
-hal/src/hal_gpio.o \
-hal/utils/src/utils_event.o \
-hal/src/hal_sleep.o
+#OBJS += gcc/system_saml11e16a.o
+OBJS += Device_Startup/startup.o
+#OBJS += hpl/wdt/hpl_wdt.o
+#OBJS += hal/utils/src/utils_syscalls.o
+#OBJS += hal/src/hal_spi_m_sync.o
+#OBJS += hal/src/hal_timer.o
+#OBJS += hal/src/hal_delay.o
+#OBJS += hpl/oscctrl/hpl_oscctrl.o
+#OBJS += hpl/core/hpl_init.o
+#OBJS += hal/src/hal_wdt.o
+#OBJS += hal/utils/src/utils_assert.o
+#OBJS += hpl/dmac/hpl_dmac.o
+#OBJS += hpl/pm/hpl_pm.o
+#OBJS += hal/src/hal_usart_sync.o
+#OBJS += hpl/mclk/hpl_mclk.o
+#OBJS += hpl/gclk/hpl_gclk.o
+#OBJS += hal/src/hal_init.o
+#OBJS += hal/utils/src/utils_list.o
+#OBJS += hpl/osc32kctrl/hpl_osc32kctrl.o
+#OBJS += hpl/tram/tram_lite.o
+#OBJS += hpl/sercom/hpl_sercom.o
+#OBJS += hpl/core/hpl_core_m23_base.o
+#OBJS += hpl/nvmctrl/nvmctrl_lite.o
+#OBJS += hal/src/hal_gpio.o
+#OBJS += hal/utils/src/utils_event.o
+#OBJS += hal/src/hal_sleep.o
 #OBJS += atmel_start.o
-OBJS += hpl/tc/hpl_tc.o \
-hal/src/hal_atomic.o \
-$(FREERTOS_ROOT)/Source/tasks.o \
-$(FREERTOS_ROOT)/Source/queue.o \
-$(FREERTOS_ROOT)/Source/portable/MemMang/heap_1.o \
-$(FREERTOS_ROOT)/Source/portable/GCC/AtmelSAML11/port.o \
-$(FREERTOS_ROOT)/Source/list.o \
-ParTest/ParTest.o \
-main-blinky.o
+#OBJS += hpl/tc/hpl_tc.o
+#OBJS += hal/src/hal_atomic.o
+OBJS += $(FREERTOS_ROOT)/Source/tasks.o
+OBJS += $(FREERTOS_ROOT)/Source/queue.o
+OBJS += $(FREERTOS_ROOT)/Source/portable/MemMang/heap_1.o
+OBJS += $(FREERTOS_ROOT)/Source/portable/GCC/AtmelSAML11/port.o
+0BJS += $(FREERTOS_ROOT)/Source/list.o
+OBJS += ParTest/ParTest.o
+OBJS += main.o
+OBJS += main-blinky.o
 
-OBJS_AS_ARGS +=  \
-"hal/src/hal_io.o" \
-"stdio_redirect/stdio_io.o" \
-"gcc/system_saml11e16a.o" \
-"hpl/wdt/hpl_wdt.o" \
-"gcc/gcc/startup_saml11e16a.o" \
-"stdio_redirect/gcc/write.o" \
-"hal/utils/src/utils_syscalls.o" \
-"stdio_redirect/gcc/read.o" \
-"hal/src/hal_spi_m_sync.o" \
-"trustzone/trustzone_manager.o" \
-"hal/src/hal_timer.o" \
-"hal/src/hal_delay.o" \
-"main.o" \
-"hpl/oscctrl/hpl_oscctrl.o" \
-"hpl/core/hpl_init.o" \
-"hal/src/hal_wdt.o" \
-"hal/utils/src/utils_assert.o" \
-"hpl/dmac/hpl_dmac.o" \
-"hpl/pm/hpl_pm.o" \
-"hal/src/hal_usart_sync.o" \
-"hpl/mclk/hpl_mclk.o" \
-"hpl/gclk/hpl_gclk.o" \
-"stdio_start.o" \
-"hal/src/hal_init.o" \
-"trustzone/trustzone_veneer.o" \
-"hal/utils/src/utils_list.o" \
-"hpl/osc32kctrl/hpl_osc32kctrl.o" \
-"examples/driver_examples.o" \
-"hpl/tram/tram_lite.o" \
-"driver_init.o" \
-"hpl/sercom/hpl_sercom.o" \
-"hpl/core/hpl_core_m23_base.o" \
-"hpl/nvmctrl/nvmctrl_lite.o" \
-"hal/src/hal_gpio.o" \
-"hal/utils/src/utils_event.o" \
-"hal/src/hal_sleep.o" \
-"atmel_start.o" \
-"hpl/tc/hpl_tc.o" \
-"hal/src/hal_atomic.o"
+# Arguments for linker
+#OBJS_AS_ARGS += "hal/src/hal_io.o"
+#OBJS_AS_ARGS += "gcc/system_saml11e16a.o"
+OBJS_AS_ARGS += "Device_Startup/startup.o"
+#OBJS_AS_ARGS += "hpl/wdt/hpl_wdt.o"
+#OBJS_AS_ARGS += "hal/utils/src/utils_syscalls.o"
+#OBJS_AS_ARGS += "hal/src/hal_spi_m_sync.o"
+#OBJS_AS_ARGS += "trustzone/trustzone_manager.o"
+#OBJS_AS_ARGS += "hal/src/hal_timer.o"
+#OBJS_AS_ARGS += "hal/src/hal_delay.o"
+OBJS_AS_ARGS += "main.o"
+OBJS_AS_ARGS += "main-blinky.o"
+#OBJS_AS_ARGS += "hpl/oscctrl/hpl_oscctrl.o"
+#OBJS_AS_ARGS += "hpl/core/hpl_init.o"
+#OBJS_AS_ARGS += "hal/src/hal_wdt.o"
+#OBJS_AS_ARGS += "hal/utils/src/utils_assert.o"
+#OBJS_AS_ARGS += "hpl/dmac/hpl_dmac.o"
+#OBJS_AS_ARGS += "hpl/pm/hpl_pm.o"
+#OBJS_AS_ARGS += "hal/src/hal_usart_sync.o"
+#OBJS_AS_ARGS += "hpl/mclk/hpl_mclk.o"
+#OBJS_AS_ARGS += "hpl/gclk/hpl_gclk.o"
+#OBJS_AS_ARGS += "stdio_start.o"
+#OBJS_AS_ARGS += "hal/src/hal_init.o"
+#OBJS_AS_ARGS += "trustzone/trustzone_veneer.o"
+#OBJS_AS_ARGS += "hal/utils/src/utils_list.o"
+#OBJS_AS_ARGS += "hpl/osc32kctrl/hpl_osc32kctrl.o"
+#OBJS_AS_ARGS += "hpl/tram/tram_lite.o"
+#OBJS_AS_ARGS += "hpl/sercom/hpl_sercom.o"
+#OBJS_AS_ARGS += "hpl/core/hpl_core_m23_base.o"
+#OBJS_AS_ARGS += "hpl/nvmctrl/nvmctrl_lite.o"
+#OBJS_AS_ARGS += "hal/src/hal_gpio.o"
+#OBJS_AS_ARGS += "hal/utils/src/utils_event.o"
+#OBJS_AS_ARGS += "hal/src/hal_sleep.o"
+#OBJS_AS_ARGS += "atmel_start.o"
+#OBJS_AS_ARGS += "hpl/tc/hpl_tc.o"
+#OBJS_AS_ARGS += "hal/src/hal_atomic.o"
+OBJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/tasks.o$(QUOTE)
+OBJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/tasks.o$(QUOTE)
+OBJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/queue.o$(QUOTE)
+OBJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/portable/MemMang/heap_1.o$(QUOTE)
+OBJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/portable/GCC/AtmelSAML11/port.o$(QUOTE)
+0BJS_AS_ARGS += $(QUOTE)$(FREERTOS_ROOT)/Source/list.o$(QUOTE)
+OBJS_AS_ARGS += "ParTest/ParTest.o"
 
 # List the dependency files
 DEPS := $(OBJS:%.o=%.d)
@@ -135,16 +161,13 @@ DEPS := $(OBJS:%.o=%.d)
 DEPS_AS_ARGS +=  \
 "hpl/wdt/hpl_wdt.d" \
 "gcc/system_saml11e16a.d" \
-"stdio_redirect/stdio_io.d" \
 "hal/utils/src/utils_event.d" \
 "hal/src/hal_io.d" \
 "hal/utils/src/utils_syscalls.d" \
-"stdio_redirect/gcc/write.d" \
 "main.d" \
 "hal/src/hal_timer.d" \
 "trustzone/trustzone_manager.d" \
 "hal/src/hal_spi_m_sync.d" \
-"gcc/gcc/startup_saml11e16a.d" \
 "hal/src/hal_wdt.d" \
 "hpl/dmac/hpl_dmac.d" \
 "hal/utils/src/utils_assert.d" \
@@ -173,17 +196,13 @@ DEPS_AS_ARGS +=  \
 "hpl/oscctrl/hpl_oscctrl.d" \
 "atmel_start.d"
 
-OUTPUT_FILE_NAME :=AtmelStart
-QUOTE := "
-OUTPUT_FILE_PATH +=$(OUTPUT_FILE_NAME).elf
-OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_FILE_NAME).elf
 
 # Establish the include directories
 INCLUDE_PATH= \
--I$(FREERTOS_ROOT)/Demo/Common \
--I$(FREERTOS_ROOT)/Source/include \
--I$(FREERTOS_ROOT)/Demo/MICROCHIP_ATSAML11E16A_GCC \
--I$(FREERTOS_ROOT)/Source/portable/GCC/AtmelSAML11 \
+-I$(QUOTE)$(FREERTOS_ROOT)/Demo/Common$(QUOTE) \
+-I$(QUOTE)$(FREERTOS_ROOT)/Source/include$(QUOTE) \
+-I$(QUOTE)$(FREERTOS_ROOT)/Demo/MICROCHIP_ATSAML11E16A_GCC$(QUOTE) \
+-I$(QUOTE)$(FREERTOS_ROOT)/Source/portable/GCC/AtmelSAML11$(QUOTE) \
 -I"./" \
 -I"config" \
 -I"hal/include" \
@@ -210,26 +229,20 @@ INCLUDE_PATH= \
 -I"include" \
 -I"ParTest"
 
-SNFLAG=-Wl,--out-implib=libsecure_gateway_veneer.lib -Wl,--cmse-implib 
 
 vpath %.c ../
 vpath %.s ../
 vpath %.S ../
-
 # All Target
 all: $(SUB_DIRS) $(OUTPUT_FILE_PATH)
 
 # Linker target
-
 $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Building target: $@
 	@echo Invoking: ARM/GNU Linker
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS_AS_ARGS) -Wl,--start-group -lm -Wl,--end-group -mthumb \
--Wl,-Map="$(OUTPUT_FILE_NAME).map" --specs=nano.specs -Wl,--gc-sections -march=armv8-m.base \
-$(INCLUDE_PATH) \
- \
--T"../Device_Startup/saml11_secure.ld" \
--L"./Device_Startup"
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -o $(OUTPUT_FILE_NAME).elf $(OBJS_AS_ARGS)  \
+$(INCLUDE_PATH) $(LDFLAGS) 
+
 	@echo Finished building target: $@
 
 	"arm-none-eabi-objcopy" -O binary "$(OUTPUT_FILE_NAME).elf" "$(OUTPUT_FILE_NAME).bin"
@@ -247,32 +260,22 @@ $(INCLUDE_PATH) \
 
 
 
-
 %.o: %.c
 	@echo Building file: $<
 	@echo ARM/GNU C Compiler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 -mcmse \
--D__SAML11E16A__ -march=armv8-m.base  \
-$(INCLUDE_PATH) \
--MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) $(CFLAGS) $(INCLUDE_PATH)  -o "$@" "$<"
 	@echo Finished building: $<
 
 %.o: %.s
 	@echo Building file: $<
 	@echo ARM/GNU Assembler
-	$(QUOTE)arm-none-eabi-as$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 -mcmse \
--D__SAML11E16A__ -march=armv8-m.base  \
-$(INCLUDE_PATH) \
--MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
+	$(QUOTE)arm-none-eabi-as$(QUOTE) $(CFLAGS) $(INCLUDE_PATH) -o "$@" "$<"
 	@echo Finished building: $<
 
 %.o: %.S
 	@echo Building file: $<
 	@echo ARM/GNU Preprocessing Assembler
-	$(QUOTE)arm-none-eabi-gcc$(QUOTE) -x c -mthumb -DDEBUG -Os -ffunction-sections -mlong-calls -g3 -Wall -c -std=gnu99 -mcmse \
--D__SAML11E16A__ -march=armv8-m.base  \
-$(INCLUDE_PATH) \
--MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"  -o "$@" "$<"
+	$(QUOTE)arm-none-eabi-gcc$(QUOTE) $(CFLAGS) $(INCLUDE_PATH)  -o "$@" "$<"
 	@echo Finished building: $<
 
 # Detect changes in the dependent files and recompile the respective object files.
