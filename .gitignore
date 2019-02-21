@@ -8,3 +8,4 @@ Local_Release
 *.elf
 *.hex
 *.lss
+*.map
