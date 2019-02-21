@@ -1,5 +1,6 @@
 ################################################################################
-# Automatically-generated file. Do not edit!
+# Generig Makefile for SAML11!
+#  Configured for non-secure
 ################################################################################
 
 ifdef SystemRoot
@@ -63,59 +64,12 @@ OBJS += hal/src/hal_sleep.o
 OBJS += atmel_start.o
 OBJS += hal/src/hal_atomic.o
 
-OBJS_AS_ARGS += "hal/src/hal_io.o"
-OBJS_AS_ARGS += "gcc/gcc/startup_saml11e16a.o"
-OBJS_AS_ARGS += "gcc/system_saml11e16a.o"
-OBJS_AS_ARGS += "hal/utils/src/utils_syscalls.o"
-OBJS_AS_ARGS += "hal/src/hal_delay.o"
-OBJS_AS_ARGS += "hpl/oscctrl/hpl_oscctrl.o"
-OBJS_AS_ARGS += "hpl/core/hpl_init.o"
-OBJS_AS_ARGS += "hal/utils/src/utils_list.o"
-OBJS_AS_ARGS += "hal/utils/src/utils_assert.o"
-OBJS_AS_ARGS += "hpl/dmac/hpl_dmac.o"
-OBJS_AS_ARGS += "hpl/pm/hpl_pm.o"
-OBJS_AS_ARGS += "hpl/mclk/hpl_mclk.o"
-OBJS_AS_ARGS += "hpl/gclk/hpl_gclk.o"
-OBJS_AS_ARGS += "hal/src/hal_init.o"
-OBJS_AS_ARGS += "main.o"
-OBJS_AS_ARGS += "hpl/osc32kctrl/hpl_osc32kctrl.o"
-OBJS_AS_ARGS += "examples/driver_examples.o"
-OBJS_AS_ARGS += "driver_init.o"
-OBJS_AS_ARGS += "hpl/core/hpl_core_m23_base.o"
-OBJS_AS_ARGS += "hal/src/hal_gpio.o"
-OBJS_AS_ARGS += "hal/utils/src/utils_event.o"
-OBJS_AS_ARGS += "hal/src/hal_sleep.o"
-OBJS_AS_ARGS += "atmel_start.o"
-OBJS_AS_ARGS += "hal/src/hal_atomic.o"
-
+OBJS_AS_ARGS := $(OBJS:%= "%")
 
 # List the dependency files
 DEPS := $(OBJS:%.o=%.d)
 
-DEPS_AS_ARGS += "gcc/system_saml11e16a.d"
-DEPS_AS_ARGS += "gcc/gcc/startup_saml11e16a.d"
-DEPS_AS_ARGS += "hal/src/hal_gpio.d"
-DEPS_AS_ARGS += "hal/src/hal_io.d"
-DEPS_AS_ARGS += "hal/utils/src/utils_syscalls.d"
-DEPS_AS_ARGS += "hal/utils/src/utils_list.d"
-DEPS_AS_ARGS += "hpl/dmac/hpl_dmac.d"
-DEPS_AS_ARGS += "hal/utils/src/utils_assert.d"
-DEPS_AS_ARGS += "hal/src/hal_delay.d"
-DEPS_AS_ARGS += "hpl/core/hpl_init.d"
-DEPS_AS_ARGS += "hpl/pm/hpl_pm.d"
-DEPS_AS_ARGS += "hpl/gclk/hpl_gclk.d"
-DEPS_AS_ARGS += "hal/src/hal_init.d"
-DEPS_AS_ARGS += "hpl/mclk/hpl_mclk.d"
-DEPS_AS_ARGS += "driver_init.d"
-DEPS_AS_ARGS += "hpl/osc32kctrl/hpl_osc32kctrl.d"
-DEPS_AS_ARGS += "main.d"
-DEPS_AS_ARGS += "examples/driver_examples.d"
-DEPS_AS_ARGS += "hal/src/hal_sleep.d"
-DEPS_AS_ARGS += "hpl/core/hpl_core_m23_base.d"
-DEPS_AS_ARGS += "hal/utils/src/utils_event.d"
-DEPS_AS_ARGS += "hal/src/hal_atomic.d"
-DEPS_AS_ARGS += "hpl/oscctrl/hpl_oscctrl.d"
-DEPS_AS_ARGS += "atmel_start.d"
+DEPS_AS_ARGS := $(DEPS:%="%")
 
 
 OUTPUT_FILE_NAME :=AtmelStart
@@ -144,6 +98,7 @@ $(OUTPUT_FILE_PATH): $(OBJS)
 	@echo Finished building target: $@
 
 	"arm-none-eabi-objcopy" -O binary "$(OUTPUT_FILE_NAME).elf" "$(OUTPUT_FILE_NAME).bin"
+	"arm-none-eabi-objcopy" -O binary "$(OUTPUT_FILE_NAME).elf" -R .userRowBlock "$(OUTPUT_FILE_NAME)s.bin"
 	"arm-none-eabi-objcopy" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  \
         "$(OUTPUT_FILE_NAME).elf" "$(OUTPUT_FILE_NAME).hex"
 	"arm-none-eabi-objcopy" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma \
@@ -214,6 +169,9 @@ endif
 
 $(SUB_DIRS):
 	$(MK_DIR) "$@"
+
+load:
+	edbg -t mchp_cm23 -p -f AtmelStarts.bin
 
 clean:
 	rm -f $(OBJS_AS_ARGS)
