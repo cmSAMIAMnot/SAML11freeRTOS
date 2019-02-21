@@ -3,3 +3,8 @@ CMSIS/Documentation/General/
 Local_Release
 *.o
 *.d
+*.bin
+*.eep
+*.elf
+*.hex
+*.lss
