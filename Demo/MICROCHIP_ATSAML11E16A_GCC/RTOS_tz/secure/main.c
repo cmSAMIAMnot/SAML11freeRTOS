@@ -249,7 +249,6 @@ void secure_print_main_menu(void)
 	printf("\n\r5 - Print DataFlash TEROW content ");
 	printf("\n\n\r---------------- Start Non-Trusted Application ------------");
 	printf("\n\n\rS - Start Standard Customer B application ");
-	printf("\n\rM - Start  Malware Customer B application ");
 	printf("\n\n\r-----------------------------------------------------------");
 	printf("\n\rChoice : ");
 }

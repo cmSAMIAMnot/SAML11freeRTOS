@@ -43,7 +43,6 @@ SUB_DIRS += gcc/gcc
 SUB_DIRS += hpl/tram
 SUB_DIRS += hpl/mclk
 SUB_DIRS += Secure_Functions
-SUB_DIRS += temperature_sensor/at30tse75x
 SUB_DIRS += hpl/pac
 SUB_DIRS += hpl/sercom
 SUB_DIRS += temperature_sensor
