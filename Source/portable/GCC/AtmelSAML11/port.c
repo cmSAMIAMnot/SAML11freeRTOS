@@ -34,6 +34,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#ifndef FREERTOS_NVIC_NONSECURE
 /* Constants required to manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL			( ( volatile uint32_t * ) 0xe000e010 )
 #define portNVIC_SYSTICK_LOAD			( ( volatile uint32_t * ) 0xe000e014 )
@@ -47,6 +48,23 @@
 #define portMIN_INTERRUPT_PRIORITY		( 255UL )
 #define portNVIC_PENDSV_PRI				( portMIN_INTERRUPT_PRIORITY << 16UL )
 #define portNVIC_SYSTICK_PRI			( portMIN_INTERRUPT_PRIORITY << 24UL )
+
+#else
+
+#define portNVIC_SYSTICK_CTRL			( ( volatile uint32_t * ) 0xe002e010 )
+#define portNVIC_SYSTICK_LOAD			( ( volatile uint32_t * ) 0xe002e014 )
+#define portNVIC_SYSTICK_CURRENT_VALUE	( ( volatile uint32_t * ) 0xe002e018 )
+#define portNVIC_INT_CTRL				( ( volatile uint32_t *) 0xe002ed04 )
+#define portNVIC_SYSPRI2				( ( volatile uint32_t *) 0xe002ed20 )
+#define portNVIC_SYSTICK_CLK			0x00000004
+#define portNVIC_SYSTICK_INT			0x00000002
+#define portNVIC_SYSTICK_ENABLE			0x00000001
+#define portNVIC_PENDSVSET				0x10000000
+#define portMIN_INTERRUPT_PRIORITY		( 255UL )
+#define portNVIC_PENDSV_PRI				( portMIN_INTERRUPT_PRIORITY << 16UL )
+#define portNVIC_SYSTICK_PRI			( portMIN_INTERRUPT_PRIORITY << 24UL )
+
+#endif
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
