@@ -1,20 +1,15 @@
 Directories:
 
-+ The FreeRTOS/Source directory contains the FreeRTOS source code, and contains
-  its own readme file.
++ The main effort is in the following locations:
+Demo/MICROCHIP_ATSAML11E16A_GCC/
+Source/portable/GCC/AtmelSAML11/
 
-+ The FreeRTOS/Demo directory contains a demo application for every official
-FreeRTOS port, and contains its own readme file.
-
-+ See http://www.freertos.org/a00017.html for full details of the directory 
-  structure and information on locating the files you require.
-
-The easiest way to use FreeRTOS is to start with one of the pre-configured demo 
-application projects (found in the FreeRTOS/Demo directory).  That way you will
-have the correct FreeRTOS source files included, and the correct include paths
-configured.  Once a demo application is building and executing you can remove
-the demo application file, and start to add in your own application source
-files.
+Development:
++ Used the Zephyr toolchain, edbg, JLINK GDBserver, and atmel studio on windows.
+The current current state of development for opensource tools supporting SAML11E16A
+is lacking.  OpenOCD does not support the DAP version of the programmer on the 
+Microchip SAML11 Xplained PRO or the processor architecture.  Programming the fuses
+has also been a problem that required using atmel studio to fix.
 
 See also -
 http://www.freertos.org/FreeRTOS-quick-start-guide.html
