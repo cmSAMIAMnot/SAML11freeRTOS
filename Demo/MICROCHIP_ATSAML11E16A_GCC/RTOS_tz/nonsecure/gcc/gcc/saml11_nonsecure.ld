@@ -40,6 +40,7 @@ SEARCH_DIR(.)
  * AS       = 0x80
  * ANSC     = 0x20
  * RS       = 0x40
+ * CHANGE: ram len from 2000 to 8000 for compile
  */
 MEMORY
 {

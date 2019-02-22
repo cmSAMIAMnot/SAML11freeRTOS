@@ -28,6 +28,7 @@
  */
 
 #include "saml11e16a.h"
+#include "../../app_veneer.h"
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -219,6 +220,7 @@ void Reset_Handler(void)
  */
 void Dummy_Handler(void)
 {
+	nsc_puts("\r\nYou Got Handled!\r\n\t SoN\r\n");
 	while (1) {
 	}
 }
